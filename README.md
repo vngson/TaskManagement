@@ -1,6 +1,6 @@
-MSSV: 20120566
-Tên: Võ Ngọc Sơn
-# TaskManagement
+# MSSV: 20120566
+# Tên: Võ Ngọc Sơn
+# Task Management
 **Các bước chạy ứng dụng quản lý công việc:**
 1. Cấu hình host, tên database, tài khoản, mật khẩu truy cập vào MySQL chưa database quản lý công việc.
 2. Nếu đã cài đặt các công cụ cần thiết để chạy ứng dụng php thì có thể đến bước tiếp theo, nếu chưa thì cần tải các công cụ hổ trợ chạy ứng dụng php.
@@ -11,5 +11,8 @@ Tên: Võ Ngọc Sơn
 - Với trang danh sách công việc, sẽ có 1 bảng gồm tên các công việc, bên cạnh sẽ có các nút là: xem chi tiêt, chỉnh sửa và xóa
     - Khi ấn nút xem chi tiết, trang sẽ chuyển hướng đến trang chi tiết công việc, trang này có chưa tất cả thông tin về công việc đó trừ id
     - Khi ấn nút chỉnh sửa, trang sẽ chuyển hướng đến trang chỉnh sửa công việc, chúng ta sẽ chỉnh sửa các thông tin của công việc và ấn xác nhận để chỉnh sửa công việc
-    - Khi ấn nút xóa, công việc sẽ được xóa trong db
+    - Khi ấn nút xóa, công việc sẽ được xóa trong db, nếu thành công sẽ hiển thị thông báo trên màn hình, reload lại trang sẽ thấy công việc đã bị xóa đi
+- Ở trên header sẽ có thông tin như logo app, tên app, tên trang hiện tại, avatar người dùng, khi hover vào avatar người dùng sẽ có tên được hiển thị ở phía dưới
+    - Khi chúng ta ấn vào logo app hoặc tên app, nó sẽ điều hướng về trang chủ
+- Ở mỗi trang đều có nút trở về, khi ấn vào nó sẽ trở về trang trước
 

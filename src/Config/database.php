@@ -8,7 +8,7 @@ use Exception;
 
 class Database {
     private $host = "localhost:3306";
-    private $db_name = "task_management";
+    private $db_name = "taskmanagementdb";
     private $username = "root";
     private $password = "12102002";
     public $conn;

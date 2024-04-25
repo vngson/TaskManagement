@@ -33,6 +33,14 @@ class TaskController {
         return $tasks;
     }
 
+    public function count() {
+        $taskModel = new TaskModel();
+        // Lấy danh sách công việc từ Model
+        $count = $taskModel->getCount();
+        // Hiển thị trang danh sách công việc
+        return $count;
+    }
+
     public function detail($id) {
         $taskModel = new TaskModel();
         // Lấy thông tin chi tiết của công việc từ Model

@@ -52,6 +52,16 @@ class TaskModel {
         return $tasks; // Trả về danh sách công việc
     }
 
+    public function getCount() {
+        // Truy vấn CSDL để lấy danh sách công việc
+        $query = "SELECT COUNT(*) FROM task";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $count = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $count; // Trả về danh sách công việc
+    }
+
     public function getTaskById($id) {
         // Truy vấn CSDL để lấy thông tin chi tiết của công việc dựa trên ID
         $query = "SELECT * FROM task WHERE id = ?";

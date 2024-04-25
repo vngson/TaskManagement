@@ -32,7 +32,7 @@ button{
     cursor: pointer;
 }
 
-a{
+a, a:hover{
     text-decoration: none;
 }
 
@@ -70,6 +70,7 @@ cursor: pointer;
     border-radius: 5px;
     border: none;
     box-shadow: 2px 2px 10px 2px #c9c9c9;
+    text-decoration: none;
 }
 
 .add_task__img,
@@ -79,12 +80,20 @@ cursor: pointer;
     object-fit: contain;
 }
 
-.add_task__btn,
-.list_task__btn{
+.add_task__title,
+.list_task__title{
     background-color: transparent;
     font-size: 2rem;
-    width: 100%;
     color: var(--black);
+}
+
+.Home__add_task:hover,
+.Home__list_task:hover{
+    text-decoration: none;
+}
+
+.Home__add_task:hover > .add_task__title, .Home__list_task:hover  > .list_task__title {
+    color: var(--blue);
 }
 
 .update_task__title{
@@ -95,24 +104,98 @@ cursor: pointer;
 
 .Header{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     height: 80px;
-    background-color: var(--blue);
+    /* background-color: var(--blue); */
+    padding: 0 50px;
+    border-bottom: solid 1px var(--black);
+}
+
+.Header__logo_title{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-right: 40px;
+    border-right: solid 1px var(--black);
+}
+
+.Header__logo_title:hover, .Return_btn__wrapper:hover {
+    text-decoration: none;
+}
+
+.Header__logo_title:hover > .Header__title, .Return_btn__wrapper:hover> .Return_btn{
+    color: var(--blue);
+}
+
+.Header__logo{
+    height: 70px;
+    object-fit: contain;
 }
 
 .Header__title{
-    font-size: 4rem;
-    text-transform: uppercase;
-    color: var(--white);
+    font-size: 3.6rem;
+    color: var(--black);
 }
+
+.Header__page{
+    flex: 1;
+    padding-left: 40px;
+    font-size: 2rem;
+    color: var(--black);
+}
+
+.Header__user{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+.Header__user--name{
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: -20px;
+    width: 150px;
+    font-size: 2rem;
+    color: var(--black);
+    z-index: 1;
+}
+
+.Header__user--avt{
+    height: 60px;
+    object-fit: contain;
+}
+
+.Header__user--avt:hover + .Header__user--name{
+    display: flex;
+}
+
+.Return_btn__wrapper{
+    width: 100%;
+    font-size: 1.6rem;
+    padding-left: 50px;
+}
+
+.Return_btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    width: 100px;
+    border-radius: 5px;
+    background-color: transparent;
+    border: solid 1px var(--black);
+}
+
 
 .Add_task, .List_task, .Task_detail, .Update_task{
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: 40px;
+    gap: 20px;
     width: 100%;
 }
 
@@ -178,7 +261,7 @@ cursor: pointer;
     color: var(--black);
 }
 
-.List_task__list{
+/* .List_task__list{
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -193,11 +276,7 @@ cursor: pointer;
 
 }
 
-.Table__row{
-    display: flex;
-    justify-content: space-between;
-    height: 36px;
-}
+
 
 .Table__title--name_job, .Task_name{
     font-size: 1.6rem;
@@ -229,6 +308,112 @@ cursor: pointer;
 
 .Task_action--link{
     color: var(--black);
+} */
+
+/* .container{
+    width: 60%;
+} */
+
+.input-group>.custom-select:not(:last-child), .input-group>.form-control_cus:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group>.custom-file, .input-group>.custom-select, .input-group>.form-control_cus, .input-group>.form-control-plaintext {
+    position: relative;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    width: 1%;
+    margin-bottom: 0;
+}
+
+.btn-outline-secondary{
+    font-size: 1.6rem;
+}
+
+.table_{
+    width: 600px;
+    font-size: 1.6rem;
+    border-radius: 5px;
+    margin: auto;
+}
+
+.table_ th, .table_ td {
+    padding: 8px; /* Khoảng cách giữa nội dung và viền của ô */
+    border-radius: 5px;
+    border: 1px solid #ddd; /* Đường viền của ô */
+}
+
+.table_th{
+    text-align: center;
+}
+
+.btn_custom{
+    display: inline-block;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    font-size: 1.6rem;
+    margin-right: 20px;
+    width: 120px;
+}
+
+.btn_lg{
+    display: inline-block;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    font-size: 1.25rem;
+    margin-right: 20px;
+    width: 120px;
+}
+
+.btn_lg:hover{
+    color: var(--blue);
+}
+
+.pagination{
+    margin-top: 20px;
+    justify-content: center;
+    font-size: 1.6rem;
+}
+
+.btn-per,
+.btn-next{
+    text-align: center;
+    width: 100px;
+}
+
+.checkbox{
+    text-align: center;
+}
+
+.row_last{
+    text-align: center;
 }
 
 .Task_detail__task{
@@ -236,6 +421,9 @@ cursor: pointer;
     list-style: none;
     flex-direction: column;
     gap: 20px;
+    border-radius: 5px;
+    border: solid 1px var(--black);
+    padding: 20px 40px;
 }
 
 .Task_detail__infor{
@@ -250,4 +438,12 @@ cursor: pointer;
 
 .Task_action--link > button:hover {
     color: var(--red);
+}
+
+.Table__action{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
 }
