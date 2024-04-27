@@ -65,3 +65,9 @@ function getSelectedTaskId() {
     return null; // Trả về null nếu không có checkbox nào được chọn
 }
 
+
+// $(function () {
+//     $('#datetimepicker-start, #datetimepicker-end').datetimepicker({
+//         format: 'YYYY-MM-DD HH:mm:ss'
+//     });
+// });

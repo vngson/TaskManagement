@@ -11,16 +11,26 @@
     $categories = $categoryController->getAllCategories();
 
 ?>
+
+<?php
+    // Create a new date object
+    $date = new DateTime();
+
+    // Format the date object in the desired format
+    $date_formatted = $date->format('Y-m-d H:i:s');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Bao gồm các tập tin CSS của Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bao gồm các tập tin CSS của DateTimePicker -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="/public/css/style.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
     <title>Add Task</title>
 
 </head>
@@ -42,9 +52,22 @@
             <label class="Add_task__form--label" for="task-description">Mô tả công việc: </label>
             <input class="Add_task__form--input" type="text" id="task-description" name="description" placeholder="Nhập mô tả">
             <label class="Add_task__form--label" for="task-start-date">Ngày bắt đầu: </label>
-            <input class="Add_task__form--input" type="text" id="datetimepicker" name="start_date" placeholder="Nhập ngày bắt đầu">
+            <?php echo '<input class="Add_task__form--input" id="task-start-date" type="datetime-local" name="start_date" value="' . $date_formatted . '">'; ?>
+            <!-- <div class="input-group date" id="datetimepicker-start" data-target-input="nearest">
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker-start" name="start_date"/>
+                <div class="input-group-append" data-target="#datetimepicker-start" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div> -->
             <label class="Add_task__form--label" for="task-due-date">Ngày kết thúc: </label>
-            <input class="Add_task__form--input" type="text" id="task-due-date" name="due_date" placeholder="Nhập ngày kết thúc">
+            <?php echo '<input class="Add_task__form--input" id="task-due-date" type="datetime-local" name="due_date" value="' . $date_formatted . '">'; ?>
+            <!-- <div class="input-group date" id="datetimepicker-end" data-target-input="nearest">
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker-end" name="due_date"/>
+                <div class="input-group-append" data-target="#datetimepicker-end" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+            <input type="text" class="form-control datetimepicker" id="datetimepicker" name="datetime"> -->
             <label class="Add_task__form--label" for="category-id">Loại công việc: </label>
             <!-- <input class="Add_task__form--input" type="text" id="category-id" name="category_id" placeholder="Nhập loại công việc"> -->
             <select class="Add_task__form--input" name="category_id" id="category-id">
@@ -62,6 +85,12 @@
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $taskController = new TaskController();
             $taskController->addTask();
+            echo "<script>
+                setTimeout(function() {
+                    location.href = '/public/index.php';
+                }, 1000);
+            </script>";
+            exit;
         }
         // Xử lý dữ liệu khi người dùng gửi form
         // $name = $_POST['name'];
@@ -85,5 +114,22 @@
         //     echo "<div class ='Add_task__error'>Đã xảy ra lỗi, vui lòng thử lại sau.</div>";
         // }
     ?>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <script>
+    $(document).ready(function(){
+        $('.datetimepicker').datepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        autoclose: true
+        });
+    });
+    </script>
+
+    <script src="/public/js/script.js"></script>
+
     </body>
 </html>

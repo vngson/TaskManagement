@@ -25,6 +25,14 @@ class TaskController {
         }
     }
 
+    public function listForRange($offset, $limit) {
+        $taskModel = new TaskModel();
+        // Lấy danh sách công việc từ Model
+        $tasks = $taskModel->getTasksForRange($offset, $limit);
+        // Hiển thị trang danh sách công việc
+        return $tasks;
+    }
+
     public function list() {
         $taskModel = new TaskModel();
         // Lấy danh sách công việc từ Model
@@ -33,10 +41,26 @@ class TaskController {
         return $tasks;
     }
 
+    public function findForRange($keyword, $offset, $limit) {
+        $taskModel = new TaskModel();
+        // Lấy danh sách công việc từ Model
+        $tasks = $taskModel->getTasksForKeywordAndRange($keyword, $offset, $limit);
+        // Hiển thị trang danh sách công việc
+        return $tasks;
+    }
+
     public function count() {
         $taskModel = new TaskModel();
         // Lấy danh sách công việc từ Model
         $count = $taskModel->getCount();
+        // Hiển thị trang danh sách công việc
+        return $count;
+    }
+
+    public function countForKeyword($keyword) {
+        $taskModel = new TaskModel();
+        // Lấy danh sách công việc từ Model
+        $count = $taskModel->getCountForKeyword($keyword);
         // Hiển thị trang danh sách công việc
         return $count;
     }
@@ -54,6 +78,19 @@ class TaskController {
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_task'])) {
             // Xử lý cập nhật thông tin công việc khi người dùng gửi form
             if ($taskModel->updateTask($id, $_POST)) {
+                echo "<div class ='Update_task__success'>Công việc đã được chỉnh sửa thành công.</div>";
+            } else {
+                echo "<div class ='Update_task__error'>Đã xảy ra lỗi, vui lòng thử lại sau.</div>";
+            }
+
+        }
+    }
+
+    public function updateStatus($id, $status) {
+        $taskModel = new TaskModel();
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_status'])) {
+            // Xử lý cập nhật thông tin công việc khi người dùng gửi form
+            if ($taskModel->updateStatusTask($id, $status)) {
                 echo "<div class ='Update_task__success'>Công việc đã được chỉnh sửa thành công.</div>";
             } else {
                 echo "<div class ='Update_task__error'>Đã xảy ra lỗi, vui lòng thử lại sau.</div>";
