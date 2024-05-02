@@ -9,17 +9,13 @@
 • Trang 1: Trang chủ
     • Liên kết tới các trang con
 • Trang 2: Thêm mới công việc
-    • Khi thêm có kiểm tra dữ liệu bắt buộc phải nhập (javasript)
 • Trang 3: Xem danh sách công việc / xoá
-    • Có ô nhập liệu để tìm kiếm công việc (theo tên và mô tả) để tìm công việc cần thiết. Ngoài ra có thể lọc các các công việc sắp hết hạn, các công việc đã hoàn thành, các
-    công việc đang thực hiện, ...
+    • Có ô nhập liệu để tìm kiếm công việc (theo tên và mô tả) để tìm công việc cần thiết. Ngoài ra có thể lọc các công việc đã hoàn thành, các công việc đang thực hiện, các công việc chưa làm.
     • Có thể xem chi tiết công việc ở một trang riêng
     • Có thể xoá công việc trong trang xem danh sách
     • Có thể chọn nhiều công việc và xoá (sử dụng check box), có thể chọn tất cả công việc để xoá
-    • Khi xoá phải báo lỗi nếu loại công việc bị tham chiếu bởi công việc
     • Có nút để liên kết tới trang cập nhật thông tin công việc.
     • Cập nhật thay đổi trạng thái công việc trong trang danh sách
-    • Quản lý danh mục loại công việc
 • Trang 4: Cập nhật công việc
     • Hiển thị nội dung công việc từ trang 2 khi người dùng chọn cập nhật
     • Sau khi cập nhật sẽ quay về trang danh sách công việc
@@ -30,7 +26,9 @@
     - Khi ấn nút xem chi tiết, trang sẽ chuyển hướng đến trang chi tiết công việc, trang này có chưa tất cả thông tin về công việc đó trừ id
     - Khi ấn nút chỉnh sửa, trang sẽ chuyển hướng đến trang chỉnh sửa công việc, chúng ta sẽ chỉnh sửa các thông tin của công việc và ấn xác nhận để chỉnh sửa công việc
     - Khi ấn nút xóa, công việc sẽ được xóa trong db, nếu thành công sẽ hiển thị thông báo trên màn hình, reload lại trang sẽ thấy công việc đã bị xóa đi
-- Ở trên header sẽ có thông tin như logo app, tên app, tên trang hiện tại, avatar người dùng, khi hover vào avatar người dùng sẽ có tên được hiển thị ở phía dưới
+    - Có thể sửa đổi trạng thái công việc và ấn nút đổi trạng thái để đổi trạng thái công việc trong db
+    - Có nút thêm công việc để điều hướng qua trang thêm công việc
+- Ở trên header sẽ có thông tin như logo app, tên app, tên trang hiện tại, avatar người dùng, khi hover vào avatar người dùng sẽ có tên người dùng được hiển thị ở phía dưới
     - Khi chúng ta ấn vào logo app hoặc tên app, nó sẽ điều hướng về trang chủ
-- Ở mỗi trang đều có nút trở về, khi ấn vào nó sẽ trở về trang trước
+- Ở mỗi trang đều có nút trở về, khi ấn vào nó sẽ trở về trang trước (trừ trang thêm công việc, ở trang này nếu ấn nút trở về thì sẽ trở về trang chủ)
 

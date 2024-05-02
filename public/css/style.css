@@ -24,7 +24,7 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     background-color: var(--white);
-    /* user-select: none; */
+    user-select: none;
 }
 
 button{
@@ -344,12 +344,24 @@ cursor: pointer;
 
 .table_ th, .table_ td {
     padding: 8px; /* Khoảng cách giữa nội dung và viền của ô */
-    border-radius: 5px;
-    border: 1px solid #ddd; /* Đường viền của ô */
+    /* border: 1px solid #ddd; Đường viền của ô */
+    height: 70px;
 }
 
-.table_th{
+.table_ th{
     text-align: center;
+    border-left: 1px solid #ddd; 
+    border-right: 1px solid #ddd; 
+}
+
+.Table__col{
+    border-left: 1px solid #ddd; 
+    border-right: 1px solid #ddd; 
+}
+
+.table_ tr{
+    border: 1px solid #ddd; /* Đường viền của ô */
+    height: 70px;
 }
 
 .btn_custom{
@@ -371,7 +383,6 @@ cursor: pointer;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     font-size: 1.6rem;
     margin-right: 20px;
-    width: 200px;
 }
 
 .btn_custom_sm{
@@ -436,7 +447,38 @@ cursor: pointer;
 
 .checkbox{
     text-align: center;
+    min-width: 30px;
 }
+
+.name{
+    min-width: 210px;
+}
+
+.description{
+    min-width: 250px;
+}
+
+.status{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 310px;
+    height: 100%;
+}
+
+.input_id{
+    width: 0px;
+}
+
+.update_status_submit{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+}
+
 
 .row_last{
     text-align: center;
@@ -491,7 +533,7 @@ cursor: pointer;
 }
 
 .table_action{
-    width: 300px;
+    min-width: 300px;
 }
 
 .table_info{
@@ -502,7 +544,7 @@ cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    
+    height: 60px;
 }
 
 .search{
@@ -515,5 +557,4 @@ cursor: pointer;
     font-size: 1.6rem;
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
 }

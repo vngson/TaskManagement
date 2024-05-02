@@ -20,19 +20,21 @@
     // Tạo đối tượng của TaskController
     $taskController = new TaskController();
     $keyword = $_GET['keyword'] ?? null;
+    $filter = $_GET['filter'] ?? null;
+
 
     // Số lượng công việc trên mỗi trang
     $per_page = 10;
 
     // Lấy trang hiện tại từ tham số URL (nếu không có thì mặc định là trang 1)
     $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
-    if($keyword)
+    if($keyword || $filter)
     {
-        $tasks = $taskController->findForRange($keyword, ($current_page - 1) * $per_page, $per_page);
+        $tasks = $taskController->filterForRange($keyword, $filter, ($current_page - 1) * $per_page, $per_page);
         // Tổng số công việc
-        $total_tasks = $taskController->countForKeyword($keyword);
+        $total_tasks = $taskController->countForFilter($keyword, $filter);
     }
-    else{
+    else {
         // Lấy danh sách công việc cho trang hiện tại
         $tasks = $taskController->listForRange(($current_page - 1) * $per_page, $per_page);
         // Tổng số công việc
@@ -48,6 +50,33 @@
     } else {
         $total_pages =  ceil($total_tasks / $per_page);
     }
+
+    function addOrUpdateUrlParam($url, $key, $value, $keyword, $filter) {
+        // Phân tách URL thành mảng các phần tử
+        $parts = parse_url($url);
+
+        // Kiểm tra xem URL có chứa tham số không
+        if ($keyword || $filter) {
+            // Parse tham số thành mảng các cặp key-value
+            parse_str($parts['query'], $query);
+            echo($query);
+
+            // Cập nhật hoặc thêm tham số mới vào mảng
+            $query[$key] = $value;
+
+            // Build lại chuỗi tham số từ mảng đã cập nhật
+            $parts['query'] = http_build_query($query);
+        } else {
+            // Nếu không có tham số, thêm tham số mới vào URL
+            $parts['query'] = urlencode($key) . '=' . urlencode($value);
+        }
+
+        // Build lại URL từ các phần tử đã cập nhật
+        $new_url = $parts['path'] . '?' . $parts['query'];
+
+        return $new_url;
+    }
+
     ?>
     <div class="List_task">
         <?php
@@ -60,20 +89,21 @@
         <h2 class="List_task__title">Danh sách công việc</h2>
         <div class="container">
             <div class="search_filter">
+                <a class="btn_custom btn-outline-primary" href="/src/Views/task/add.php">Thêm công việc</a>
                 <form method="post" class="search">
-                    <div class="input-group mb-3 col-xs-4" id="inputdefault">
-                        <input type="text" name="keyword" class="form-control form-control-lg" placeholder="Tìm kiếm công việc" id="search-input" value="<?php echo $keyword; ?>">
+                    <div class="input-group col-xs-4" id="inputdefault">
+                        <input type="text" name="keyword" class="form-control form-control-lg" placeholder="Tìm kiếm công việc" id="search-input" value="<?php echo $keyword; ?>" style="font-size: 1.6rem;">
                         <div class="input-group-append">
-                            <button class="btn_lg btn-outline-secondary" name="find" type="submit" id="search-button">Tìm</button>
+                            <button class="btn_lg btn-outline-secondary" name="find" type="submit" id="search-button" style="font-size: 1.6rem;">Tìm</button>
                         </div>
                     </div>
                 </form>
                 <form method="post" class="filter">
                     <select class="Status_selection" name="status_filter">
-                        <option value="">Tất cả</option>
-                        <option value="TODO">Chưa làm</option>
-                        <option value="IN PROGRESS">Đang làm</option>
-                        <option value="FINISHED">Hoàn thành</option>
+                        <option value="" <?php echo $filter === '' ? 'selected' : ''; ?>>Tất cả</option>
+                        <option value="TODO" <?php echo $filter === 'TODO' ? 'selected' : ''; ?>>Chưa làm</option>
+                        <option value="IN PROGRESS" <?php echo $filter === 'IN PROGRESS' ? 'selected' : ''; ?>>Đang làm</option>
+                        <option value="FINISHED" <?php echo $filter === 'FINISHED' ? 'selected' : ''; ?>>Hoàn thành</option>
                     </select>
                     <button type="submit" name="filter" class="btn_custom_sm btn-outline-secondary">Lọc</button>
                 </form>
@@ -82,29 +112,33 @@
                 <table class="table_ table-striped">
                     <thead>
                         <tr>
-                            <th scope="col" class="table_th Table__col"><input type="checkbox" id="select-all"></th>
-                            <th scope="col" class="table_th Table__col">Tên công việc</th>
-                            <th scope="col" class="table_th Table__col">Mô tả</th>
-                            <th scope="col" class="table_th Table__col">Trạng thái</th>
-                            <th scope="col" class="table_th Table__col">Hành động</th>
+                            <th scope="col" class="table_th Table__col checkbox"><input type="checkbox" id="select-all"></th>
+                            <th scope="col" class="table_th Table__col name">Tên công việc</th>
+                            <th scope="col" class="table_th Table__col description">Mô tả</th>
+                            <th scope="col" class="table_th Table__col status">Trạng thái</th>
+                            <th scope="col" class="table_th Table__col table_action">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($tasks as $task) : ?>
                             <tr>
                                 <td class="Table__col checkbox"><input type="checkbox" name="selected_tasks[]" data-id="<?php echo $task['id']; ?>" value="<?php echo $task['id']; ?>"></td>
-                                <td class="Table__col table_info"><?php echo $task['name']; ?></td>
-                                <td class="Table__col table_info"><?php echo $task['description']; ?></td>
-                                <td class="Table__col table_info">
-                                    <select class="Status_selection" name="status_<?php echo $task['id']; ?>">
-                                        <option value="TODO" <?php echo $task['status'] === 'TODO' ? 'selected' : ''; ?>>Chưa làm</option>
-                                        <option value="IN PROGRESS" <?php echo $task['status'] === 'IN PROGRESS' ? 'selected' : ''; ?>>Đang làm</option>
-                                        <option value="FINISHED" <?php echo $task['status'] === 'FINISHED' ? 'selected' : ''; ?>>Hoàn thành</option>
-                                    </select>
+                                <td class="Table__col name"><?php echo $task['name']; ?></td>
+                                <td class="Table__col description"><?php echo $task['description']; ?></td>
+                                <td class="Table__col status">
+                                    <form method="post" class="update_status_submit">
+                                        <select class="Status_selection" name="status_<?php echo $task['id']; ?>">
+                                            <option value="TODO" <?php echo $task['status'] === 'TODO' ? 'selected' : ''; ?>>Chưa làm</option>
+                                            <option value="IN PROGRESS" <?php echo $task['status'] === 'IN PROGRESS' ? 'selected' : ''; ?>>Đang làm</option>
+                                            <option value="FINISHED" <?php echo $task['status'] === 'FINISHED' ? 'selected' : ''; ?>>Hoàn thành</option>
+                                        </select>
+                                        <input type="hidden" name="task_id" class="input_id" value="<?php echo $task['id']; ?>">
+                                        <button type="submit" name="update_status_submit" class="btn_custom btn-outline-info">Đổi trạng thái</button>
+                                    </form>
                                 </td>
                                 <td class="Table__col table_action">
                                     <a class="btn_custom_sm btn-outline-primary" href="detail.php?id=<?php echo $task['id']; ?>">Xem chi tiết</a>
-                                    <a class="btn_custom_sm btn-outline-warning" href="update.php?id=<?php echo $task['id']; ?>">Chỉnh sửa</a>
+                                    <a class="btn_custom_sm btn-outline-warning" href="update.php?id=<?php echo $task['id']; ?>">Chỉnh sửa</a>           
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -112,9 +146,9 @@
                 </table>
                 <div class="Table__action">
                     <input type="hidden" name="delete_selected_tasks">
-                    <button type="submit" name="delete_task" class="btn_custom btn-outline-danger">Xóa</button>
-                    <input type="hidden" name="update_status_submit">
-                    <button type="submit" name="update_status_submit" class="btn_custom btn-outline-info">Thay đổi trạng thái</button>
+                    <button type="submit" name="delete_task" class="btn_custom_sm btn-outline-danger">Xóa</button>
+                    <input type="hidden" name="delete_all_task">
+                    <button type="submit" name="delete_all_task" class="btn_custom_sm btn-outline-danger">Xóa tất cả</button>
                 </div>
             </form>
             <!-- Phân trang -->
@@ -152,31 +186,59 @@
                 </script>";
                 exit;
             } elseif (isset($_POST['update_status_submit'])) {
-                echo "1";
-                // Kiểm tra xem đã chọn các công việc để cập nhật trạng thái hay không
-                if (isset($_POST['selected_tasks'])) {
-                    foreach ($_POST['selected_tasks'] as $task_id) {
-                        $new_status = $_POST['status_' . $task_id];
-                        $taskController->updateStatus($task_id, $new_status);
-                    }
-                    // echo "<script>
-                    //     setTimeout(function() {
-                    //         location.href = '/src/Views/task/list.php';
-                    //     }, 1000);
-                    // </script>";
+                print_r($_POST);
+                if (isset($_POST['task_id'])) {
+                    $task_id = $_POST['task_id'];
+                    $new_status = $_POST['status_' . $task_id]; // Lấy trạng thái mới từ select tương ứng với ID công việc
+                    $taskController->updateStatus($task_id, $new_status);
+                    // Sau khi cập nhật, chuyển hướng trang sau một khoảng thời gian
+                    echo "<script>
+                            setTimeout(function() {
+                                location.href = '/src/Views/task/list.php';
+                            }, 1000);
+                        </script>";
                     exit;
                 }
             } elseif (isset($_POST['find'])) {
-                echo "2";
-                echo "<script>
-                    location.href = '/src/Views/task/list.php?keyword=" . urlencode($_POST['keyword']) . "';
-                </script>";
+                // Lấy URL hiện tại
+                $current_url = strtok($_SERVER["REQUEST_URI"], '?');
+
+                // Thêm hoặc cập nhật tham số filter trong URL hiện tại
+                $new_url = addOrUpdateUrlParam($current_url, 'keyword', $_POST['keyword'], $keyword, $filter);
+
+                // Chuyển hướng đến URL mới
+                echo "<script>location.href = '$new_url';</script>";
+                // echo "2";
+                // echo "<script>
+                //     location.href = '/src/Views/task/list.php?keyword=" . urlencode($_POST['keyword']) . "';
+                // </script>";
                 exit;
             } elseif (isset($_POST['filter'])) {
-                echo "2";
+                
+                // Lấy URL hiện tại
+                $current_url = strtok($_SERVER["REQUEST_URI"], '?');
+
+                // Thêm hoặc cập nhật tham số filter trong URL hiện tại
+                $new_url = addOrUpdateUrlParam($current_url, 'filter', $_POST['status_filter'], $keyword, $filter);
+
+                // Chuyển hướng đến URL mới
+                echo "<script>location.href = '$new_url';</script>";
+                // // Lấy URL hiện tại
+                // $current_url = strtok($_SERVER["REQUEST_URI"],'?');
+
+                // // Thêm tham số filter vào URL hiện tại
+                // $new_url = $current_url . (strpos($current_url, '?') !== false ? '&' : '?') . 'filter=' . urlencode($_POST['status_filter']);
+
+                // // Chuyển hướng đến URL mới
+                // echo "<script>location.href = '$new_url';</script>";
+                exit;
+            } elseif (isset($_POST['delete_all_task'])) {
+                $taskController->deleteAllTask();
                 echo "<script>
-                    location.href = '/src/Views/task/list.php?filter=" . urlencode($_POST['status_filter']) . "';
-                </script>";
+                        setTimeout(function() {
+                            location.href = '/src/Views/task/list.php';
+                        }, 1000);
+                    </script>";
                 exit;
             }
         }

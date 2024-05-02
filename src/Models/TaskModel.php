@@ -73,6 +73,42 @@ class TaskModel {
     
         return $tasks; // Trả về danh sách công việc
     }
+
+    public function getTasksForFilterAndRange($keyword, $filter, $offset, $limit) {
+        $decoded_keyword = urldecode($keyword);
+        $decoded_filter = urldecode($filter);
+
+        if($decoded_keyword !==  '')
+        {
+            if($decoded_filter !==  '')
+            {
+                $query = "SELECT DISTINCT * FROM task WHERE status=:status AND ( name LIKE :keyword OR description LIKE :keyword ) LIMIT :offset, :limit";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindValue(':status', $decoded_filter );
+                $stmt->bindValue(':keyword', '%' . $decoded_keyword . '%', PDO::PARAM_STR);
+            }
+            else{
+                $query = "SELECT DISTINCT * FROM task WHERE name LIKE :keyword OR description LIKE :keyword LIMIT :offset, :limit";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindValue(':keyword', '%' . $decoded_keyword . '%', PDO::PARAM_STR);
+            }
+        }
+        else{
+            if($decoded_filter !==  '')
+            {
+                $query = "SELECT DISTINCT * FROM task WHERE status=:status LIMIT :offset, :limit";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindValue(':status', $decoded_filter );
+            }
+        }
+
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        return $tasks; // Trả về danh sách công việc
+    }
     
 
     public function getCount() {
@@ -85,13 +121,33 @@ class TaskModel {
         return $count; // Trả về danh sách công việc
     }
 
-    public function getCountForKeyword($keyword) {
-            
+    public function getCountForFilter($keyword, $filter) {
         $decoded_keyword = urldecode($keyword);
-        // Truy vấn CSDL để lấy danh sách công việc
-        $query = "SELECT  COUNT(*) FROM task WHERE name LIKE :keyword OR description LIKE :keyword";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute(['keyword' => '%' . $decoded_keyword . '%']);
+        $decoded_filter = urldecode($filter);
+
+        if($decoded_keyword !==  '')
+        {
+            if($decoded_filter !==  '')
+            {
+                $query = "SELECT DISTINCT COUNT(*) FROM task WHERE status=:status AND ( name LIKE :keyword OR description LIKE :keyword ) LIMIT :offset, :limit";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindValue(':status', $decoded_filter );
+                $stmt->bindValue(':keyword', '%' . $decoded_keyword . '%', PDO::PARAM_STR);
+            }
+            else{
+                $query = "SELECT DISTINCT COUNT(*) FROM task WHERE name LIKE :keyword OR description LIKE :keyword LIMIT :offset, :limit";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindValue(':keyword', '%' . $decoded_keyword . '%', PDO::PARAM_STR);
+            }
+        }
+        else{
+            if($decoded_filter !==  '')
+            {
+                $query = "SELECT DISTINCT COUNT(*) FROM task WHERE status=:status LIMIT :offset, :limit";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindValue(':status', $decoded_filter );
+            }
+        }
         $count = $stmt->fetchColumn();
 
         return $count; // Trả về danh sách công việc
@@ -177,6 +233,19 @@ class TaskModel {
 
         // Bind tham số và thực thi câu lệnh SQL
         $stmt->bindParam(":id", $id);
+
+        // Thực hiện câu lệnh SQL và kiểm tra kết quả
+        if ($stmt->execute()) {
+            return true; // Trả về true nếu xóa công việc thành công
+        } else {
+            return false; // Trả về false nếu có lỗi xảy ra
+        }
+    }
+
+    public function deleteAllTask() {
+        // Câu lệnh SQL để xóa công việc dựa trên ID
+        $query = "DELETE FROM task";
+        $stmt = $this->db->prepare($query);
 
         // Thực hiện câu lệnh SQL và kiểm tra kết quả
         if ($stmt->execute()) {

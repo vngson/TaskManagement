@@ -41,13 +41,21 @@ class TaskController {
         return $tasks;
     }
 
-    public function findForRange($keyword, $offset, $limit) {
+    public function filterForRange($keyword, $filter, $offset, $limit) {
         $taskModel = new TaskModel();
         // Lấy danh sách công việc từ Model
-        $tasks = $taskModel->getTasksForKeywordAndRange($keyword, $offset, $limit);
+        $tasks = $taskModel->getTasksForFilterAndRange($keyword, $filter, $offset, $limit);
         // Hiển thị trang danh sách công việc
         return $tasks;
     }
+
+    // public function filterForRange($filter, $offset, $limit) {
+    //     $taskModel = new TaskModel();
+    //     // Lấy danh sách công việc từ Model
+    //     $tasks = $taskModel->getTasksForFilterAndRange($filter, $offset, $limit);
+    //     // Hiển thị trang danh sách công việc
+    //     return $tasks;
+    // }
 
     public function count() {
         $taskModel = new TaskModel();
@@ -57,10 +65,10 @@ class TaskController {
         return $count;
     }
 
-    public function countForKeyword($keyword) {
+    public function countForFilter($keyword, $filter) {
         $taskModel = new TaskModel();
         // Lấy danh sách công việc từ Model
-        $count = $taskModel->getCountForKeyword($keyword);
+        $count = $taskModel->getCountForFilter($keyword, $filter);
         // Hiển thị trang danh sách công việc
         return $count;
     }
@@ -88,7 +96,7 @@ class TaskController {
 
     public function updateStatus($id, $status) {
         $taskModel = new TaskModel();
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_status'])) {
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_status_submit'])) {
             // Xử lý cập nhật thông tin công việc khi người dùng gửi form
             if ($taskModel->updateStatusTask($id, $status)) {
                 echo "<div class ='Update_task__success'>Công việc đã được chỉnh sửa thành công.</div>";
@@ -107,6 +115,20 @@ class TaskController {
 
             if ($taskModel->deleteTask($id)) {
                 echo "<div class ='Delete_task__success'>Công việc đã được xóa thành công.</div>";
+            } else {
+                echo "<div class ='Delete_task__error'>Đã xảy ra lỗi, vui lòng thử lại sau.</div>";
+            }
+        }
+    }
+
+    public function deleteAllTask() {
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_all_task'])){
+
+
+            $taskModel = new TaskModel();
+
+            if ($taskModel->deleteAllTask()) {
+                echo "<div class ='Delete_task__success'>Đã xóa toàn bộ công việc thành công.</div>";
             } else {
                 echo "<div class ='Delete_task__error'>Đã xảy ra lỗi, vui lòng thử lại sau.</div>";
             }
